@@ -40,4 +40,11 @@ public final class ImageManipulationUtils {
 		return src.getSubimage(x, y, w, h);
 	}
 
+	public static BufferedImage replaceAt(BufferedImage sourceImage, BufferedImage partImage, int x, int y) {
+		Graphics2D g2Source = sourceImage.createGraphics();
+		g2Source.drawImage(partImage, x, y, null);
+		g2Source.dispose();
+		return sourceImage;
+	}
+	
 }

@@ -56,4 +56,15 @@ public class Tests {
 		assertTrue(new File(TESTS_OUTPUT_PATH + imageName + "_forth_corner." + PNG).isFile());
 	}
 
+	@Test
+	public void testReplaceAt() throws IOException {
+		String image1Name = "twitter";
+		BufferedImage image1 = ImageIO.read(new File(DEFAULT_IMAGES_PATH + image1Name + "." + PNG));
+		BufferedImage image1Cropped = ImageManipulationUtils.cropImage(image1, 25, 25, 25, 25);
+		String targetImage2 = "redsquare";
+		BufferedImage image2 = ImageIO.read(new File(DEFAULT_IMAGES_PATH + targetImage2 + "." + PNG));
+		BufferedImage resultImage = ImageManipulationUtils.replaceAt(image2, image1Cropped, 25, 25);
+		ImageIO.write(resultImage, PNG, new File(TESTS_OUTPUT_PATH + "hibridImage." + PNG));
+		assertTrue(new File(TESTS_OUTPUT_PATH + "hibridImage." + PNG).isFile());
+	}
 }
