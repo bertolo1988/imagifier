@@ -1,1 +1,13 @@
 /target/
+target/
+.settings/
+.mtj.tmp/
+tmp/
+*.prefs
+.project
+*.classpath
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
