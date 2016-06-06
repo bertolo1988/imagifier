@@ -32,7 +32,7 @@ public class Imagifier {
 		for (int i = 0; i < sampleImagesFiles.length; i++) {
 			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), newWidth,
 					newHeight);
-			Color averageColor = ImageManipulationUtils.averageColor(image, 0, 0, newWidth, newHeight);
+			Color averageColor = ImageManipulationUtils.averageColor(image);
 			sampleImages.add(new PixelImage(sampleImagesFiles[i].getName(), image, averageColor));
 		}
 		return sampleImages;

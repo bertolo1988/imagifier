@@ -16,6 +16,10 @@ public final class ImageManipulationUtils {
 		return dimg;
 	}
 
+	public static Color averageColor(BufferedImage image) {
+		return ImageManipulationUtils.averageColor(image, 0, 0, image.getWidth(), image.getHeight());
+	}
+
 	public static Color averageColor(BufferedImage bi, int x0, int y0, int w, int h) {
 		int x1 = x0 + w;
 		int y1 = y0 + h;
@@ -29,7 +33,11 @@ public final class ImageManipulationUtils {
 			}
 		}
 		int num = w * h;
-		return new Color(sumr / num, sumg / num, sumb / num);
+		return new Color((int) sumr / num, (int) sumg / num, (int) sumb / num);
+	}
+
+	public static BufferedImage cropImage(BufferedImage src, int x, int y, int w, int h) {
+		return src.getSubimage(x, y, w, h);
 	}
 
 }
