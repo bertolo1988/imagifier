@@ -13,30 +13,31 @@ public class Imagifier {
 	static final String DEFAULT_IMAGES_PATH = "./sample_images";
 	static final String DEFAULT_SOURCE_IMAGE = "image_source";
 	static final String DEFAULT_RESULT_IMAGE = "image_result";
-	static final int N = 1000;
+	static final int N = 1;
+	static final int SQUARE_SIDE = 15;
 
 	public static void main(String[] args) throws IOException {
 		BufferedImage sourceImage = ImageIO.read(new File(DEFAULT_SOURCE_IMAGE + "." + PNG));
-		final int k = sourceImage.getWidth() / N < 1 ? 1 : sourceImage.getWidth() / N;
-		final int p = sourceImage.getHeight() / N < 1 ? 1 : sourceImage.getHeight() / N;
-
-		ArrayList<PixelImage> sampleImages = buildSampleColorImages(k, p);
-		buildImagifiedImage(sampleImages, sourceImage, k, p);
-		ImageIO.write(sourceImage, PNG, new File(DEFAULT_RESULT_IMAGE + "." + PNG));
+		ArrayList<PixelImage> sampleImages = buildSampleColorImages();
+		BufferedImage resultImage = buildImagifiedImage(sampleImages, sourceImage);
+		ImageIO.write(resultImage, PNG, new File(DEFAULT_RESULT_IMAGE + "." + PNG));
 		System.out.println("Done!");
 	}
 
-	private static void buildImagifiedImage(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int k,
-			int p) {
-
-		for (int x = 0, y = 0; y < sourceImage.getHeight() - p; y = y + p) {
-			for (x = 0; x < sourceImage.getWidth() - k; x = x + k) {
-				BufferedImage crop = ImageManipulationUtils.cropImage(sourceImage, x, y, k, p);
+	private static BufferedImage buildImagifiedImage(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage) {
+		int sourceWidth = sourceImage.getWidth();
+		int sourceHeight = sourceImage.getHeight();
+		BufferedImage finalImage = new BufferedImage((sourceWidth / N) * SQUARE_SIDE, (sourceHeight / N) * SQUARE_SIDE,
+				sourceImage.getType());
+		for (int x = 0, y = 0; y < sourceHeight / N; y++) {
+			for (x = 0; x < sourceWidth / N; x++) {
+				BufferedImage crop = ImageManipulationUtils.cropImage(sourceImage, x * N, y * N, N, N);
 				Color cropColor = ImageManipulationUtils.averageColor(crop);
 				BufferedImage bestSuitedSample = calcBestColor(sampleImages, cropColor);
-				ImageManipulationUtils.replaceAt(sourceImage, bestSuitedSample, x, y);
+				ImageManipulationUtils.replaceAt(finalImage, bestSuitedSample, x * SQUARE_SIDE, y * SQUARE_SIDE);
 			}
 		}
+		return finalImage;
 	}
 
 	private static BufferedImage calcBestColor(ArrayList<PixelImage> sampleImages, Color cropColor) {
@@ -53,12 +54,12 @@ public class Imagifier {
 		return sampleImages.get(result).getImage();
 	}
 
-	private static ArrayList<PixelImage> buildSampleColorImages(int newWidth, int newHeight) throws IOException {
+	private static ArrayList<PixelImage> buildSampleColorImages() throws IOException {
 		File[] sampleImagesFiles = new File(DEFAULT_IMAGES_PATH).listFiles();
 		ArrayList<PixelImage> sampleImages = new ArrayList<PixelImage>();
 		for (int i = 0; i < sampleImagesFiles.length; i++) {
-			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), newWidth,
-					newHeight);
+			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), SQUARE_SIDE,
+					SQUARE_SIDE);
 			Color averageColor = ImageManipulationUtils.averageColor(image);
 			sampleImages.add(new PixelImage(sampleImagesFiles[i].getName(), image, averageColor));
 		}
