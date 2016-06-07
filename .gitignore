@@ -11,3 +11,5 @@ tmp/
 *.war
 *.ear
 hs_err_pid*
+image_result.png
+image_source.png
