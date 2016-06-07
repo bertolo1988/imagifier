@@ -5,15 +5,15 @@ import java.awt.image.BufferedImage;
 
 public class PixelImage {
 
-	private String name;
 	private BufferedImage image;
 	private Color representedColor;
+	private int averageGrayLevel;
 
-	public PixelImage(String name, BufferedImage image, Color representedColor) {
+	public PixelImage(BufferedImage image, Color representedColor, int averageGrayLevel) {
 		super();
-		this.name = name;
 		this.image = image;
 		this.representedColor = representedColor;
+		this.averageGrayLevel = averageGrayLevel;
 	}
 
 	public BufferedImage getImage() {
@@ -32,12 +32,12 @@ public class PixelImage {
 		this.representedColor = representedColor;
 	}
 
-	public String getName() {
-		return name;
+	public int getAverageGrayLevel() {
+		return averageGrayLevel;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setAverageGrayLevel(int averageGrayLevel) {
+		this.averageGrayLevel = averageGrayLevel;
 	}
 
 }

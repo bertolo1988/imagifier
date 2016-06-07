@@ -40,11 +40,25 @@ public final class ImageManipulationUtils {
 		return src.getSubimage(x, y, w, h);
 	}
 
+	public static int calcAverageGrayLevel(BufferedImage img) {
+		long grayLevel = 0;
+		for (int x = 0; x < img.getWidth(); ++x)
+			for (int y = 0; y < img.getHeight(); ++y) {
+				int rgb = img.getRGB(x, y);
+				int r = (rgb >> 16) & 0xFF;
+				int g = (rgb >> 8) & 0xFF;
+				int b = (rgb & 0xFF);
+
+				grayLevel = grayLevel + (r + g + b) / 3;
+			}
+		return (int) (grayLevel / (img.getWidth() * img.getHeight()));
+	}
+
 	public static BufferedImage replaceAt(BufferedImage sourceImage, BufferedImage partImage, int x, int y) {
 		Graphics2D g2Source = sourceImage.createGraphics();
 		g2Source.drawImage(partImage, x, y, null);
 		g2Source.dispose();
 		return sourceImage;
 	}
-	
+
 }
