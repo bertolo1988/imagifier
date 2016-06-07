@@ -64,7 +64,7 @@ public class Imagifier {
 	private static ArrayList<PixelImage> buildSampleColorImages() throws IOException {
 		File[] sampleImagesFiles = new File(DEFAULT_IMAGES_PATH).listFiles();
 		ArrayList<PixelImage> sampleImages = new ArrayList<PixelImage>();
-		for (int i = 0; i < sampleImagesFiles.length; i++) {
+		for (int i = 0; sampleImagesFiles != null && i < sampleImagesFiles.length; i++) {
 			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), SQUARE_SIDE,
 					SQUARE_SIDE);
 			Color averageColor = ImageManipulationUtils.averageColor(image);
