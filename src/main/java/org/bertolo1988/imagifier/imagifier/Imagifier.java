@@ -14,7 +14,9 @@ public class Imagifier {
     static final String DEFAULT_IMAGES_PATH = "./sample_images";
     static final String DEFAULT_SOURCE_IMAGE = "image_source";
     static final String DEFAULT_RESULT_IMAGE = "image_result";
+    static final int PERCENTAGE_INCREMENTS = 25;
     static final int N = 1;
+    static final int SQUARE_SIDE = 15;
 
     public static void main( String[] args ) throws IOException {
         BufferedImage sourceImage = ImageIO.read( new File( DEFAULT_SOURCE_IMAGE + "." + PNG ) );
@@ -49,7 +51,7 @@ public class Imagifier {
         int targetWidth = sourceWidth / N * SQUARE_SIDE;
         int targetHeight = sourceHeight / N * SQUARE_SIDE;
         if ( targetWidth * targetHeight >= Integer.MAX_VALUE / 4 || targetWidth * targetHeight < 0 ) {
-            System.out.println( "Target image too big... Size will be adjusted!" );
+            System.out.println( "Target image too big... Size will be adjusted! Output may look cropped.." );
             if ( targetWidth > targetHeight ) {
                 targetWidth = (int)Math.sqrt( ( Integer.MAX_VALUE / 4 ) * (float)( targetWidth / targetHeight ) );
                 targetHeight = ( Integer.MAX_VALUE / 4 ) / targetWidth;
