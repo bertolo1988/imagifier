@@ -15,8 +15,8 @@ public class Imagifier {
 	static final String DEFAULT_SOURCE_IMAGE = "image_source";
 	static final String DEFAULT_RESULT_IMAGE = "image_result";
 	static final int PERCENTAGE_INCREMENTS = 25;
-	static final int N = 1;
-	static final int SQUARE_SIDE = 10;
+	static final int SRC_SQUARE_SIZE = 1;
+	static final int SQUARE_SIZE = 10;
 	static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
 
 	public static void main(String[] args) throws IOException {
@@ -36,13 +36,13 @@ public class Imagifier {
 		int sourceWidth = sourceImage.getWidth();
 		int sourceHeight = sourceImage.getHeight();
 		BufferedImage finalImage = createOutputBufferedImage(sourceImage, sourceWidth, sourceHeight);
-		for (int x = 0, y = 0, lastPercentage = 0; y < sourceHeight / N; y++) {
-			lastPercentage = printPercentage(y, sourceHeight / N, lastPercentage);
-			for (x = 0; x < sourceWidth / N; x++) {
-				BufferedImage crop = ImageManipulationUtils.cropImage(sourceImage, x * N, y * N, N, N);
+		for (int x = 0, y = 0, lastPercentage = 0; y < sourceHeight / SRC_SQUARE_SIZE; y++) {
+			lastPercentage = printPercentage(y, sourceHeight / SRC_SQUARE_SIZE, lastPercentage);
+			for (x = 0; x < sourceWidth / SRC_SQUARE_SIZE; x++) {
+				BufferedImage crop = ImageManipulationUtils.cropSquare(sourceImage, x * SRC_SQUARE_SIZE, y * SRC_SQUARE_SIZE, SRC_SQUARE_SIZE);
 				Color cropColor = ImageManipulationUtils.averageColor(crop);
 				BufferedImage bestSuitedSample = calcBestColor(sampleImages, cropColor);
-				ImageManipulationUtils.replaceAt(finalImage, bestSuitedSample, x * SQUARE_SIDE, y * SQUARE_SIDE);
+				ImageManipulationUtils.replaceAt(finalImage, bestSuitedSample, x * SQUARE_SIZE, y * SQUARE_SIZE);
 			}
 		}
 		return finalImage;
@@ -50,8 +50,8 @@ public class Imagifier {
 
 	private static BufferedImage createOutputBufferedImage(BufferedImage sourceImage, int sourceWidth,
 			int sourceHeight) {
-		int targetWidth = sourceWidth / N * SQUARE_SIDE;
-		int targetHeight = sourceHeight / N * SQUARE_SIDE;
+		int targetWidth = sourceWidth / SRC_SQUARE_SIZE * SQUARE_SIZE;
+		int targetHeight = sourceHeight / SRC_SQUARE_SIZE * SQUARE_SIZE;
 		if (targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0) {
 			System.out.println("Target image too big... Size will be adjusted! Output may look cropped..");
 			if (targetWidth > targetHeight) {
@@ -83,8 +83,8 @@ public class Imagifier {
 		File[] sampleImagesFiles = new File(DEFAULT_IMAGES_PATH).listFiles();
 		ArrayList<PixelImage> sampleImages = new ArrayList<PixelImage>();
 		for (int i = 0; sampleImagesFiles != null && i < sampleImagesFiles.length; i++) {
-			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), SQUARE_SIDE,
-					SQUARE_SIDE);
+			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), SQUARE_SIZE,
+					SQUARE_SIZE);
 			Color averageColor = ImageManipulationUtils.averageColor(image);
 			int averageGrayLevel = ImageManipulationUtils.calcAverageGrayLevel(image);
 			sampleImages.add(new PixelImage(image, averageColor, averageGrayLevel));

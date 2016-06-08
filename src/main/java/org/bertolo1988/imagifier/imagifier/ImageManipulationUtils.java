@@ -36,6 +36,10 @@ public final class ImageManipulationUtils {
 		return new Color((int) sumr / num, (int) sumg / num, (int) sumb / num);
 	}
 
+	public static BufferedImage cropSquare(BufferedImage src, int x, int y, int s) {
+		return src.getSubimage(x, y, s, s);
+	}
+
 	public static BufferedImage cropImage(BufferedImage src, int x, int y, int w, int h) {
 		return src.getSubimage(x, y, w, h);
 	}
