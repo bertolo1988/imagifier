@@ -6,10 +6,10 @@ import java.util.ArrayList;
 
 public class Imagifier {
 
-    static final int PERCENTAGE_INCREMENTS = 25;
-    static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
+    private static final int PERCENTAGE_INCREMENTS = 25;
+    private static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
     private static Imagifier instance = null;
-    static final int SRC_SQUARE_SIZE = 4;
+    private static final int SRC_SQUARE_SIZE = 4;
 
     private Imagifier() {
     }
