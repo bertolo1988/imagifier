@@ -12,8 +12,16 @@ mvn package
 
 # Run
 
-do this
+#### Windows
+
+mvn exec:java -Dexec.mainClass="org.bertolo1988.imagifier.imagifier.Run" -Dexec.args="10 C:\dir\path\sample_images C:\another\path\logo.png C:\the\path\fds.jpg"
+
+#### Unix
+
+to do
 
 # Arguments
 
-Imagifier can be ran without arguments and it will use
+Arguments must be ordered.
+First argument should be numerical and it specifies the amount of pixels that a single source pixel will ocupy in the resulting image.
+The other arguments are collections directory, source image (must have image extension) and the last one is the path where the image should be saved with the according file type.
