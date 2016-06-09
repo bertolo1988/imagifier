@@ -9,7 +9,7 @@ public class Imagifier {
     static final int PERCENTAGE_INCREMENTS = 25;
     static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
     private static Imagifier instance = null;
-    static final int SRC_SQUARE_SIZE = 1;
+    static final int SRC_SQUARE_SIZE = 4;
 
     private Imagifier() {
     }
@@ -45,7 +45,7 @@ public class Imagifier {
         int targetWidth = sourceWidth / SRC_SQUARE_SIZE * squareSize;
         int targetHeight = sourceHeight / SRC_SQUARE_SIZE * squareSize;
         if ( targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0 ) {
-            throw new ImageTooBig(
+            throw new Exception(
                 "Image is too big. You are trying to create a " + targetWidth + "x" + targetHeight + " image." );
         }
         return new BufferedImage( targetWidth, targetHeight, sourceImage.getType() );
