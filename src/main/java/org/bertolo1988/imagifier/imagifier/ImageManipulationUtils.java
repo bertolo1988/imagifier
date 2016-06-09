@@ -24,8 +24,8 @@ public final class ImageManipulationUtils {
         int x1 = x0 + w;
         int y1 = y0 + h;
         long sumr = 0;
-        int sumg = 0;
-        int sumb = 0;
+        long sumg = 0;
+        long sumb = 0;
         for ( int x = x0 ; x < x1 ; x++ ) {
             for ( int y = y0 ; y < y1 ; y++ ) {
                 Color pixel = new Color( bi.getRGB( x, y ) );
