@@ -50,7 +50,7 @@ public class Imagifier {
 			throw new ImageTooBigException(
 					"Image is too big. You are trying to create a " + targetWidth + "x" + targetHeight + " image.");
 		}
-		return new BufferedImage(targetWidth, targetHeight, sourceImage.getType());
+		return new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_ARGB);
 	}
 
 	private BufferedImage calcBestColor(ArrayList<PixelImage> sampleImages, Color cropColor) {

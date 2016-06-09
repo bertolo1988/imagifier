@@ -6,7 +6,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 public final class ImageManipulationUtils {
-
+	
     public static BufferedImage resize( BufferedImage img, int newW, int newH ) {
         Image tmp = img.getScaledInstance( newW, newH, Image.SCALE_SMOOTH );
         BufferedImage dimg = new BufferedImage( newW, newH, BufferedImage.TYPE_INT_ARGB );
