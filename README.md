@@ -8,7 +8,7 @@ It transforms every square of pixels of a source image to an image wich pixels a
 
 # Compile
 
-do this
+mvn package
 
 # Run
 
