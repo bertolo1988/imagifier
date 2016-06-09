@@ -12,11 +12,11 @@ import javax.imageio.ImageIO;
 
 public class Run {
 
-    static final String DEFAULT_IMAGES_PATH = "./sample_images";
-    static final String DEFAULT_SOURCE_IMAGE_PATH = "image_source.png";
-    static final String DEFAULT_RESULT_IMAGE_PATH = "image_result.png";
-    static final int DEFAULT_SQUARE_SIZE = 20;
-    static final int VALID_NUMBER_OF_ARGS = 4;
+    private static final String DEFAULT_IMAGES_PATH = "./sample_images";
+    private static final String DEFAULT_SOURCE_IMAGE_PATH = "image_source.png";
+    private static final String DEFAULT_RESULT_IMAGE_PATH = "image_result.png";
+    private static final int DEFAULT_SQUARE_SIZE = 20;
+    private static final int VALID_NUMBER_OF_ARGS = 4;
 
     public static void main( String[] args ) throws Exception {
         try {

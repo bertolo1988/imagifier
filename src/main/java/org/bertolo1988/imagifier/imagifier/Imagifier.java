@@ -14,9 +14,6 @@ public class Imagifier {
     private Imagifier() {
     }
 
-    public void initialize() {
-    }
-
     public static Imagifier getInstance() {
         if ( instance == null ) {
             instance = new Imagifier();
