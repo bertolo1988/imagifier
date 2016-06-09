@@ -4,7 +4,7 @@ Imagifier lets you build an image using a collection of images as the "new pixel
 
 # How it works
 
-It transforms every square of pixels of a source image to an image wich pixels are made by images of the given collection.
+It transforms every pixel of the source image to an image wich pixels are made by images of the given collection.
 
 # Compile
 
