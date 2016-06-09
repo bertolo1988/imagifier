@@ -2,110 +2,82 @@ package org.bertolo1988.imagifier.imagifier;
 
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-
-import javax.imageio.ImageIO;
 
 public class Imagifier {
 
-	static final String PNG = "png";
-	static final String DEFAULT_IMAGES_PATH = "./sample_images";
-	static final String DEFAULT_SOURCE_IMAGE = "image_source";
-	static final String DEFAULT_RESULT_IMAGE = "image_result";
-	static final int PERCENTAGE_INCREMENTS = 25;
-	static final int SRC_SQUARE_SIZE = 1;
-	static final int SQUARE_SIZE = 10;
-	static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
+    static final int PERCENTAGE_INCREMENTS = 25;
+    static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
+    private static Imagifier instance = null;
+    static final int SRC_SQUARE_SIZE = 1;
 
-	public static void main(String[] args) throws IOException {
-		BufferedImage sourceImage = ImageIO.read(new File(DEFAULT_SOURCE_IMAGE + "." + PNG));
-		ArrayList<PixelImage> sampleImages = buildSampleColorImages();
-		System.out.println("Done with sample conversion!");
-		BufferedImage resultImage;
-		resultImage = buildImagifiedImage(sampleImages, sourceImage);
-		if (resultImage != null) {
-			System.out.println("100%!\nWriting to file...");
-			ImageIO.write(resultImage, PNG, new File(DEFAULT_RESULT_IMAGE + "." + PNG));
-			System.out.println("Saved to " + DEFAULT_RESULT_IMAGE + "." + PNG);
-		}
-	}
+    private Imagifier() {
+    }
 
-	private static BufferedImage buildImagifiedImage(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage) {
-		int sourceWidth = sourceImage.getWidth();
-		int sourceHeight = sourceImage.getHeight();
-		BufferedImage finalImage = createOutputBufferedImage(sourceImage, sourceWidth, sourceHeight);
-		for (int x = 0, y = 0, lastPercentage = 0; y < sourceHeight / SRC_SQUARE_SIZE; y++) {
-			lastPercentage = printPercentage(y, sourceHeight / SRC_SQUARE_SIZE, lastPercentage);
-			for (x = 0; x < sourceWidth / SRC_SQUARE_SIZE; x++) {
-				BufferedImage crop = ImageManipulationUtils.cropSquare(sourceImage, x * SRC_SQUARE_SIZE, y * SRC_SQUARE_SIZE, SRC_SQUARE_SIZE);
-				Color cropColor = ImageManipulationUtils.averageColor(crop);
-				BufferedImage bestSuitedSample = calcBestColor(sampleImages, cropColor);
-				ImageManipulationUtils.replaceAt(finalImage, bestSuitedSample, x * SQUARE_SIZE, y * SQUARE_SIZE);
-			}
-		}
-		return finalImage;
-	}
+    public void initialize() {
+    }
 
-	private static BufferedImage createOutputBufferedImage(BufferedImage sourceImage, int sourceWidth,
-			int sourceHeight) {
-		int targetWidth = sourceWidth / SRC_SQUARE_SIZE * SQUARE_SIZE;
-		int targetHeight = sourceHeight / SRC_SQUARE_SIZE * SQUARE_SIZE;
-		if (targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0) {
-			System.out.println("Target image too big... Size will be adjusted! Output may look cropped..");
-			if (targetWidth > targetHeight) {
-				targetWidth = (int) Math.sqrt(BYTE_ARRAY_MAX * (float) (targetWidth / targetHeight));
-				targetHeight = BYTE_ARRAY_MAX / targetWidth;
-			} else {
-				targetHeight = (int) Math.sqrt(BYTE_ARRAY_MAX * (float) (targetHeight / targetWidth));
-				targetWidth = BYTE_ARRAY_MAX / targetHeight;
-			}
-		}
-		BufferedImage finalImage = new BufferedImage(targetWidth, targetHeight, sourceImage.getType());
-		return finalImage;
-	}
+    public static Imagifier getInstance() {
+        if ( instance == null ) {
+            instance = new Imagifier();
+        }
+        return instance;
+    }
 
-	private static BufferedImage calcBestColor(ArrayList<PixelImage> sampleImages, Color cropColor) {
-		int result = 0;
+    public BufferedImage imagify( ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int squareSize ) throws Exception {
+        int sourceWidth = sourceImage.getWidth();
+        int sourceHeight = sourceImage.getHeight();
+        BufferedImage finalImage = createOutputBufferedImage( sourceImage, sourceWidth, sourceHeight, squareSize );
+        for ( int x = 0, y = 0, lastPercentage = 0 ; y < sourceHeight / SRC_SQUARE_SIZE ; y++ ) {
+            lastPercentage = printPercentage( y, sourceHeight / SRC_SQUARE_SIZE, lastPercentage );
+            for ( x = 0 ; x < sourceWidth / SRC_SQUARE_SIZE ; x++ ) {
+                BufferedImage crop = ImageManipulationUtils.cropSquare( sourceImage, x * SRC_SQUARE_SIZE,
+                    y * SRC_SQUARE_SIZE, SRC_SQUARE_SIZE );
+                Color cropColor = ImageManipulationUtils.averageColor( crop );
+                BufferedImage bestSuitedSample = calcBestColor( sampleImages, cropColor );
+                ImageManipulationUtils.replaceAt( finalImage, bestSuitedSample, x * squareSize, y * squareSize );
+            }
+        }
+        return finalImage;
+    }
 
-		for (int minimum = 255 * 3, i = 0; i < sampleImages.size(); i++) {
-			int quantification = quantifyColorDeviation(cropColor, sampleImages.get(i).getRepresentedColor());
-			if (minimum > quantification) {
-				minimum = quantification;
-				result = i;
-			}
-		}
-		return sampleImages.get(result).getImage();
-	}
+    private BufferedImage createOutputBufferedImage( BufferedImage sourceImage, int sourceWidth, int sourceHeight, int squareSize ) throws Exception {
+        int targetWidth = sourceWidth / SRC_SQUARE_SIZE * squareSize;
+        int targetHeight = sourceHeight / SRC_SQUARE_SIZE * squareSize;
+        if ( targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0 ) {
+            throw new ImageTooBig(
+                "Image is too big. You are trying to create a " + targetWidth + "x" + targetHeight + " image." );
+        }
+        return new BufferedImage( targetWidth, targetHeight, sourceImage.getType() );
+    }
 
-	private static ArrayList<PixelImage> buildSampleColorImages() throws IOException {
-		File[] sampleImagesFiles = new File(DEFAULT_IMAGES_PATH).listFiles();
-		ArrayList<PixelImage> sampleImages = new ArrayList<PixelImage>();
-		for (int i = 0; sampleImagesFiles != null && i < sampleImagesFiles.length; i++) {
-			BufferedImage image = ImageManipulationUtils.resize(ImageIO.read(sampleImagesFiles[i]), SQUARE_SIZE,
-					SQUARE_SIZE);
-			Color averageColor = ImageManipulationUtils.averageColor(image);
-			int averageGrayLevel = ImageManipulationUtils.calcAverageGrayLevel(image);
-			sampleImages.add(new PixelImage(image, averageColor, averageGrayLevel));
-		}
-		return sampleImages;
-	}
+    private BufferedImage calcBestColor( ArrayList<PixelImage> sampleImages, Color cropColor ) {
+        int result = 0;
 
-	public static int quantifyColorDeviation(Color colorA, Color colorB) {
-		int result = 0;
-		result += Math.abs(colorA.getBlue() - colorB.getBlue());
-		result += Math.abs(colorA.getRed() - colorB.getRed());
-		result += Math.abs(colorA.getGreen() - colorB.getGreen());
-		return result;
-	}
+        for ( int minimum = 255 * 3, i = 0 ; i < sampleImages.size() ; i++ ) {
+            int quantification = quantifyColorDeviation( cropColor, sampleImages.get( i ).getRepresentedColor() );
+            if ( minimum > quantification ) {
+                minimum = quantification;
+                result = i;
+            }
+        }
+        return sampleImages.get( result ).getImage();
+    }
 
-	private static int printPercentage(int y, int i, int lastPercentage) {
-		int percentage = (y * 100) / i;
-		if (percentage % PERCENTAGE_INCREMENTS == 0 && percentage > lastPercentage) {
-			System.out.print(percentage + "%...");
-		}
-		return percentage;
-	}
+    public int quantifyColorDeviation( Color colorA, Color colorB ) {
+        int result = 0;
+        result += Math.abs( colorA.getBlue() - colorB.getBlue() );
+        result += Math.abs( colorA.getRed() - colorB.getRed() );
+        result += Math.abs( colorA.getGreen() - colorB.getGreen() );
+        return result;
+    }
+
+    private int printPercentage( int y, int i, int lastPercentage ) {
+        int percentage = ( y * 100 ) / i;
+        if ( percentage % PERCENTAGE_INCREMENTS == 0 && percentage > lastPercentage ) {
+            System.out.print( percentage + "%..." );
+        }
+        return percentage;
+    }
 
 }
