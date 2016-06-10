@@ -9,11 +9,6 @@ It transforms every pixel of the source image to an image wich pixels are made b
 |<img src="http://i.imgur.com/F60pE8I.jpg" width="200"/>   | <img src="http://i.imgur.com/g4i9ImH.jpg" width="200" /> | <img src="http://i.imgur.com/fjybkeb.jpg" width="200" /> |
 
 ----------
-
-### How it works
-
-The images, from the given collection,  will be choosen by averaging the color of all pixels in comparison to the source pixel. 
-The average color is calculated by adding up the amount of RGB.Red, Green, Blue divided by 3.
  
 ### Compile
 
