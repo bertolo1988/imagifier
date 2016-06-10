@@ -4,6 +4,10 @@
 Imagifier lets you build an image using a collection of images as the "new pixels".
 It transforms every pixel of the source image to an image wich pixels are made by images of the given collection. 
 
+| Before       | After           | Detail  |
+|:------------:|:---------------:|:-------:|
+|<img src="http://i.imgur.com/F60pE8I.jpg" width="200"/>   | <img src="http://i.imgur.com/g4i9ImH.jpg" width="200" /> | <img src="http://i.imgur.com/fjybkeb.jpg" width="200" /> |
+
 ----------
 
 ### How it works
@@ -17,13 +21,7 @@ The average color is calculated by adding up the amount of RGB.Red, Green, Blue 
 
 ### Run
 
-**Windows**
-
 > mvn exec:java -Dexec.mainClass="org.bertolo1988.imagifier.imagifier.Run" -Dexec.args="10 C:\dir\path\sample_images C:\another\path\logo.png C:\the\path\fds.jpg"
-
-**Unix**
-
-to do
 
 ### Arguments
 
