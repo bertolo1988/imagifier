@@ -22,8 +22,8 @@ public class Imagifier {
 		return instance;
 	}
 
-	public BufferedImage imagify(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int squareSize, int srcSquareSize)
-			throws Exception {
+	public BufferedImage imagify(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int squareSize,
+			int srcSquareSize) throws Exception {
 		int sourceWidth = sourceImage.getWidth();
 		int sourceHeight = sourceImage.getHeight();
 		BufferedImage finalImage = createOutputBufferedImage(sourceWidth, sourceHeight, squareSize, srcSquareSize);
@@ -41,8 +41,8 @@ public class Imagifier {
 		return finalImage;
 	}
 
-	private BufferedImage createOutputBufferedImage(int sourceWidth, int sourceHeight, int squareSize, int srcSquareSize)
-			throws Exception {
+	private BufferedImage createOutputBufferedImage(int sourceWidth, int sourceHeight, int squareSize,
+			int srcSquareSize) throws Exception {
 		int targetWidth = sourceWidth / srcSquareSize * squareSize;
 		int targetHeight = sourceHeight / srcSquareSize * squareSize;
 		if (targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0) {
@@ -56,10 +56,12 @@ public class Imagifier {
 		int result = 0;
 		int minimum = 255 * 3;
 		for (int i = 0; i < sampleImages.size(); i++) {
-			int quantification = quantifyColorDeviation(cropColor, sampleImages.get(i).getRepresentedColor());
-			if (minimum > quantification) {
-				minimum = quantification;
-				result = i;
+			if (ImageManipulationUtils.getDominantColorName(cropColor) == sampleImages.get(i).getDominantColor()) {
+				int quantification = quantifyColorDeviation(cropColor, sampleImages.get(i).getRepresentedColor());
+				if (minimum > quantification) {
+					minimum = quantification;
+					result = i;
+				}
 			}
 		}
 		return sampleImages.get(result).getImage();

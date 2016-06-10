@@ -11,9 +11,11 @@ import java.util.regex.Pattern;
 import javax.imageio.ImageIO;
 
 import org.bertolo1988.imagifier.imagifier.exceptions.UserInputValidationException;
+import org.bertolo1988.imagifier.imagifier.types.ImageType;
 
 public class Run {
 
+	private static final ImageType DEFAULT_IMAGE_TYPE = ImageType.PNG;
 	private static final String DEFAULT_IMAGES_PATH = "./sample_images";
 	private static final String DEFAULT_SOURCE_IMAGE_PATH = "image_source.png";
 	private static final String DEFAULT_RESULT_IMAGE_PATH = "image_result.png";
@@ -24,8 +26,8 @@ public class Run {
 	public static void main(String[] args) throws Exception {
 		try {
 			if (args.length == 0) {
-				run(DEFAULT_SRC_SQUARE_SIZE,DEFAULT_SQUARE_SIZE, DEFAULT_IMAGES_PATH, DEFAULT_SOURCE_IMAGE_PATH, DEFAULT_RESULT_IMAGE_PATH,
-						ImageType.PNG);
+				run(DEFAULT_SRC_SQUARE_SIZE, DEFAULT_SQUARE_SIZE, DEFAULT_IMAGES_PATH, DEFAULT_SOURCE_IMAGE_PATH,
+						DEFAULT_RESULT_IMAGE_PATH, ImageType.PNG);
 			} else if (args.length == VALID_NUMBER_OF_ARGS) {
 				int srcSquareSide = Integer.parseInt(args[0]);
 				int squareSide = Integer.parseInt(args[1]);
@@ -35,12 +37,10 @@ public class Run {
 				if (!new File(args[3]).isFile()) {
 					throw new UserInputValidationException("Invalid source image path!");
 				}
-				if (args[4].length() < 5) {
+				if (args[4].length() < 6 || !isValidImageName(args[4])) {
 					throw new UserInputValidationException("Invalid result image path!");
-				} else if (isValidImageTypeExtension(getOutputFileType(args[3]))) {
-					throw new UserInputValidationException("Invalid output file type!");
 				} else {
-					run(srcSquareSide,squareSide, args[2], args[3], args[4], getImageType(args[4]));
+					run(srcSquareSide, squareSide, args[2], args[3], args[4], getImageType(args[4]));
 				}
 			} else {
 				throw new UserInputValidationException("Invalid number of arguments!");
@@ -51,8 +51,8 @@ public class Run {
 		}
 	}
 
-	private static boolean isValidImageTypeExtension(String str) {
-		Pattern pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpg|png|bmp))$)");
+	private static boolean isValidImageName(String str) {
+		Pattern pattern = Pattern.compile("([^\\s]+(\\.(?i)(jpg|png|bmp|jpeg))$)");
 		Matcher matcher = pattern.matcher(str);
 		return matcher.matches();
 
@@ -69,16 +69,12 @@ public class Run {
 		case "JPEG":
 			return ImageType.JPEG;
 		default:
-			return ImageType.PNG;
+			return DEFAULT_IMAGE_TYPE;
 		}
 	}
 
-	private static String getOutputFileType(String fileName) {
-		return fileName.substring(fileName.length() - 3);
-	}
-
-	private static void run(int srcSquareSize, int squareSize, String sampleImagesDirPath, String sourceImagePath, String resultImagePath,
-			ImageType outputType) throws Exception {
+	private static void run(int srcSquareSize, int squareSize, String sampleImagesDirPath, String sourceImagePath,
+			String resultImagePath, ImageType outputType) throws Exception {
 		BufferedImage sourceImage = ImageIO.read(new File(sourceImagePath));
 		ArrayList<PixelImage> sampleImages = buildSampleColorImages(sampleImagesDirPath, squareSize);
 		System.out.println("Done with sample conversion!");
@@ -102,12 +98,10 @@ public class Run {
 					squareSize);
 			Color averageColor = ImageManipulationUtils.averageColor(image);
 			int averageGrayLevel = ImageManipulationUtils.calcAverageGrayLevel(image);
-			sampleImages.add(new PixelImage(image, averageColor, averageGrayLevel));
+			sampleImages.add(new PixelImage(image, averageColor, averageGrayLevel,
+					ImageManipulationUtils.getDominantColorName(averageColor)));
 		}
 		return sampleImages;
 	}
 
-
-
 }
-
