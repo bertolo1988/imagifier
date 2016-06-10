@@ -24,4 +24,4 @@ to do
 
 Arguments must be ordered.
 First argument should be numerical and it specifies the amount of pixels that a single source pixel will ocupy in the resulting image.
-The other arguments are collections directory, source image (must have image extension) and the last one is the path where the image should be saved with the according file type.
+The other arguments are the collections directory, source image (must have image extension) and the last one is the path where the image should be saved with the according file type.
