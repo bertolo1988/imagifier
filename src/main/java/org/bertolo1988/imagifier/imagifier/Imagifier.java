@@ -27,7 +27,7 @@ public class Imagifier {
 			throws Exception {
 		int sourceWidth = sourceImage.getWidth();
 		int sourceHeight = sourceImage.getHeight();
-		BufferedImage finalImage = createOutputBufferedImage(sourceImage, sourceWidth, sourceHeight, squareSize);
+		BufferedImage finalImage = createOutputBufferedImage(sourceWidth, sourceHeight, squareSize);
 		int lastPercentage = 0;
 		for (int y = 0; y < sourceHeight / SRC_SQUARE_SIZE; y++) {
 			lastPercentage = printPercentage(y, sourceHeight / SRC_SQUARE_SIZE, lastPercentage);
@@ -42,8 +42,8 @@ public class Imagifier {
 		return finalImage;
 	}
 
-	private BufferedImage createOutputBufferedImage(BufferedImage sourceImage, int sourceWidth, int sourceHeight,
-			int squareSize) throws Exception {
+	private BufferedImage createOutputBufferedImage(int sourceWidth, int sourceHeight, int squareSize)
+			throws Exception {
 		int targetWidth = sourceWidth / SRC_SQUARE_SIZE * squareSize;
 		int targetHeight = sourceHeight / SRC_SQUARE_SIZE * squareSize;
 		if (targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0) {
