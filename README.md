@@ -21,11 +21,20 @@ The average color is calculated by adding up the amount of RGB.Red, Green, Blue 
 
 ### Run
 
-> mvn exec:java -Dexec.mainClass="org.bertolo1988.imagifier.imagifier.Run" -Dexec.args="10 C:\dir\path\sample_images C:\another\path\logo.png C:\the\path\fds.jpg"
+> mvn exec:java -Dexec.mainClass="org.bertolo1988.imagifier.imagifier.Run" -Dexec.args="3 10 C:\dir\path\sample_images C:\another\path\logo.png C:\the\path\fds.jpg"
 
 ### Arguments
 
-Arguments must be ordered.
-First argument should be numerical and it specifies the amount of pixels that a single source pixel will ocupy in the resulting image.
-The other arguments are the collections directory, source image (must have image extension) and the last one is the path where the image should be saved with the according file type.
+Arguments must be in the following order:
+
+1. Source square side
+2. Target square side
+3. Collections directory path
+4. Source image (must have extension)
+5. Output image (must have extension)
+
+
+First two arguments should be numerical. They specify how many pixels from the source image are going to be converted in 1 single collection image in the output.
+For instance 3 10 means, a square 3x3 will look like a 10x10 in the output image.
+The other arguments are the collections directory, source image (must have image extension) and the last one is the path where the image should be saved with the corresponding file type.
 
