@@ -11,7 +11,6 @@ public class Imagifier {
 	private static final int PERCENTAGE_INCREMENTS = 25;
 	private static final int BYTE_ARRAY_MAX = Integer.MAX_VALUE / 10;
 	private static Imagifier instance = null;
-	private static final int SRC_SQUARE_SIZE = 1;
 
 	private Imagifier() {
 	}
@@ -23,17 +22,17 @@ public class Imagifier {
 		return instance;
 	}
 
-	public BufferedImage imagify(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int squareSize)
+	public BufferedImage imagify(ArrayList<PixelImage> sampleImages, BufferedImage sourceImage, int squareSize, int srcSquareSize)
 			throws Exception {
 		int sourceWidth = sourceImage.getWidth();
 		int sourceHeight = sourceImage.getHeight();
-		BufferedImage finalImage = createOutputBufferedImage(sourceWidth, sourceHeight, squareSize);
+		BufferedImage finalImage = createOutputBufferedImage(sourceWidth, sourceHeight, squareSize, srcSquareSize);
 		int lastPercentage = 0;
-		for (int y = 0; y < sourceHeight / SRC_SQUARE_SIZE; y++) {
-			lastPercentage = printPercentage(y, sourceHeight / SRC_SQUARE_SIZE, lastPercentage);
-			for (int x = 0; x < sourceWidth / SRC_SQUARE_SIZE; x++) {
-				BufferedImage crop = ImageManipulationUtils.cropSquare(sourceImage, x * SRC_SQUARE_SIZE,
-						y * SRC_SQUARE_SIZE, SRC_SQUARE_SIZE);
+		for (int y = 0; y < sourceHeight / srcSquareSize; y++) {
+			lastPercentage = printPercentage(y, sourceHeight / srcSquareSize, lastPercentage);
+			for (int x = 0; x < sourceWidth / srcSquareSize; x++) {
+				BufferedImage crop = ImageManipulationUtils.cropSquare(sourceImage, x * srcSquareSize,
+						y * srcSquareSize, srcSquareSize);
 				Color cropColor = ImageManipulationUtils.averageColor(crop);
 				BufferedImage bestSuitedSample = calcBestColor(sampleImages, cropColor);
 				ImageManipulationUtils.replaceAt(finalImage, bestSuitedSample, x * squareSize, y * squareSize);
@@ -42,10 +41,10 @@ public class Imagifier {
 		return finalImage;
 	}
 
-	private BufferedImage createOutputBufferedImage(int sourceWidth, int sourceHeight, int squareSize)
+	private BufferedImage createOutputBufferedImage(int sourceWidth, int sourceHeight, int squareSize, int srcSquareSize)
 			throws Exception {
-		int targetWidth = sourceWidth / SRC_SQUARE_SIZE * squareSize;
-		int targetHeight = sourceHeight / SRC_SQUARE_SIZE * squareSize;
+		int targetWidth = sourceWidth / srcSquareSize * squareSize;
+		int targetHeight = sourceHeight / srcSquareSize * squareSize;
 		if (targetWidth * targetHeight >= BYTE_ARRAY_MAX || targetWidth * targetHeight < 0) {
 			throw new ImageTooBigException(
 					"Image is too big. You are trying to create a " + targetWidth + "x" + targetHeight + " image.");

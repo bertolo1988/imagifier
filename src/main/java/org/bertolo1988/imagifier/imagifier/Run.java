@@ -18,27 +18,29 @@ public class Run {
 	private static final String DEFAULT_SOURCE_IMAGE_PATH = "image_source.png";
 	private static final String DEFAULT_RESULT_IMAGE_PATH = "image_result.png";
 	private static final int DEFAULT_SQUARE_SIZE = 20;
-	private static final int VALID_NUMBER_OF_ARGS = 4;
+	private static final int DEFAULT_SRC_SQUARE_SIZE = 2;
+	private static final int VALID_NUMBER_OF_ARGS = 5;
 
 	public static void main(String[] args) throws Exception {
 		try {
 			if (args.length == 0) {
-				run(DEFAULT_SQUARE_SIZE, DEFAULT_IMAGES_PATH, DEFAULT_SOURCE_IMAGE_PATH, DEFAULT_RESULT_IMAGE_PATH,
+				run(DEFAULT_SRC_SQUARE_SIZE,DEFAULT_SQUARE_SIZE, DEFAULT_IMAGES_PATH, DEFAULT_SOURCE_IMAGE_PATH, DEFAULT_RESULT_IMAGE_PATH,
 						ImageType.PNG);
 			} else if (args.length == VALID_NUMBER_OF_ARGS) {
-				int squareSide = Integer.parseInt(args[0]);
-				if (!new File(args[1]).isDirectory()) {
+				int srcSquareSide = Integer.parseInt(args[0]);
+				int squareSide = Integer.parseInt(args[1]);
+				if (!new File(args[2]).isDirectory()) {
 					throw new UserInputValidationException("Invalid sample images dir path!");
 				}
-				if (!new File(args[2]).isFile()) {
+				if (!new File(args[3]).isFile()) {
 					throw new UserInputValidationException("Invalid source image path!");
 				}
-				if (args[3].length() < 5) {
+				if (args[4].length() < 5) {
 					throw new UserInputValidationException("Invalid result image path!");
 				} else if (isValidImageTypeExtension(getOutputFileType(args[3]))) {
 					throw new UserInputValidationException("Invalid output file type!");
 				} else {
-					run(squareSide, args[1], args[2], args[3], getImageType(args[3]));
+					run(srcSquareSide,squareSide, args[2], args[3], args[4], getImageType(args[4]));
 				}
 			} else {
 				throw new UserInputValidationException("Invalid number of arguments!");
@@ -75,7 +77,7 @@ public class Run {
 		return fileName.substring(fileName.length() - 3);
 	}
 
-	private static void run(int squareSize, String sampleImagesDirPath, String sourceImagePath, String resultImagePath,
+	private static void run(int srcSquareSize, int squareSize, String sampleImagesDirPath, String sourceImagePath, String resultImagePath,
 			ImageType outputType) throws Exception {
 		BufferedImage sourceImage = ImageIO.read(new File(sourceImagePath));
 		ArrayList<PixelImage> sampleImages = buildSampleColorImages(sampleImagesDirPath, squareSize);
@@ -83,7 +85,7 @@ public class Run {
 		System.out.println("Starting to imagify...");
 		Imagifier imagifier = Imagifier.getInstance();
 		BufferedImage resultImage = null;
-		resultImage = imagifier.imagify(sampleImages, sourceImage, squareSize);
+		resultImage = imagifier.imagify(sampleImages, sourceImage, squareSize, srcSquareSize);
 		if (resultImage != null) {
 			System.out.println("100%!\nWriting to file...");
 			ImageIO.write(resultImage, outputType.toString(), new File(resultImagePath));
