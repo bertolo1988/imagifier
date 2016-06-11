@@ -12,7 +12,7 @@ import org.bertolo1988.imagifier.imagifier.types.ImageType;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ImageManipulationUtilsTests {
+public class ImageManipulationUtilsTest {
 
 	private static final String TESTS_OUTPUT_PATH = "tmp/";
 	private static final String DEFAULT_IMAGES_PATH = "./sample_images/";
