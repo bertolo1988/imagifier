@@ -6,7 +6,7 @@ It transforms every pixel of the source image to an image wich pixels are made b
 
 | Before       | After           | Detail  |
 |:------------:|:---------------:|:-------:|
-|<img src="http://i.imgur.com/F60pE8I.jpg" width="200"/>   | <img src="http://i.imgur.com/g4i9ImH.jpg" width="200" /> | <img src="http://i.imgur.com/fjybkeb.jpg" width="200" /> |
+|<img src="http://i.imgur.com/KcPCn04.jpg" width="200"/>   | <img src="http://i.imgur.com/MqjMBKx.png" width="200" /> | <img src="http://i.imgur.com/Vkc1O3h.jpg" width="200" /> |
 
 ----------
  
