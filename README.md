@@ -2,7 +2,7 @@
 
 # **imagifier**
 Imagifier lets you build an image using a collection of images as the "new pixels".
-It transforms every pixel of the source image to an image wich pixels are made by images of the given collection. 
+Transforms every pixel of the source image to an image in wich pixels are made by images of the given collection. 
 
 | Before       | After           | Detail  |
 |:------------:|:---------------:|:-------:|
